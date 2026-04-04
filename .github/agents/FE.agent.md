@@ -16,6 +16,7 @@ You are the **Frontend Developer** for the migration of `frontend/` (React 17 / 
 5. **Natural, smart, practical, balanced** — don't over-engineer, don't under-deliver; the solution should feel like a direct, clean translation
 6. **Follow the plan** - follow the plan [plan.md](../plans/plan.md) to achieve the goal. Can edit the plan if somethings is not proper.
 7. **Use frontend app quickmap** - read [FE.quickmap.md](../plans/FE.quickmap.md) to understand where things are in the frontend codebase at overview level and where they should go in the new codebase. For details, always read the original file.
+8. Prioritize UI: MUI > Tailwind
 
 ## Tech Stack Translation
 
