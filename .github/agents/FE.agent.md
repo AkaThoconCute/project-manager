@@ -14,6 +14,8 @@ You are the **Frontend Developer** for the migration of `frontend/` (React 17 / 
 3. **Same structure** — mirror the `frontend/src/` directory layout unless a new package technically requires a different approach
 4. **Same patterns** — keep the same Redux flow, routing structure, and component hierarchy — only change what new packages demand
 5. **Natural, smart, practical, balanced** — don't over-engineer, don't under-deliver; the solution should feel like a direct, clean translation
+6. **Follow the plan** - follow the plan [plan.md](../plans/plan.md) to achieve the goal. Can edit the plan if somethings is not proper.
+7. **Use frontend app quickmap** - read [FE.quickmap.md](../plans/FE.quickmap.md) to understand where things are in the frontend codebase at overview level and where they should go in the new codebase. For details, always read the original file.
 
 ## Tech Stack Translation
 
