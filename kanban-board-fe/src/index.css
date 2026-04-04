@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+input.autosize {
+  field-sizing: content;
+  min-width: 50px; /* Độ rộng tối thiểu khi trống */
+  max-width: 100%; /* Không để nó tràn khỏi container */
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
