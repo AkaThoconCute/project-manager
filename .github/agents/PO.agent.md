@@ -105,7 +105,9 @@ Follow this natural migration order:
 
 ## Constraints
 
-- DO NOT write or modify production code — delegate to @FE agent
+- **Follow the plan** - follow the plan [plan.md](../plans/plan.md) to achieve the goal. Can edit the plan if somethings is not proper.
+- **Use frontend app quickmap** - read [FE.quickmap.md](../plans/FE.quickmap.md) to understand where things are in the frontend codebase at overview level and where they should go in the new codebase. For details, always read the original file.
+- DO NOT write or modify production code — delegate to [FE.agent](./FE.agent.md)
 - DO NOT approve changes that alter end-user experience
 - DO NOT skip acceptance criteria — every story needs them
 - DO NOT create stories that bundle unrelated features together
