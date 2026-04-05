@@ -11,7 +11,7 @@ import AddInput from "../shared/AddInput";
 import ListMore from "./listMore/ListMore";
 import "./draggingStyles.css";
 import TitleUpdate from "./TitleUpdate";
-import { Task } from "@mui/icons-material";
+import Task from "./tasks/Task";
 
 interface ListItemProps {
   list: ListItemType;
