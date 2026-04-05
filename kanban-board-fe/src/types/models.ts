@@ -112,6 +112,7 @@ export interface Task {
   deadline?: string;
   author: string;
   archived: boolean;
+  deleted?: boolean;
   comments: Comment[];
   users: (string | UserSummary)[];
   usersWatching: string[];

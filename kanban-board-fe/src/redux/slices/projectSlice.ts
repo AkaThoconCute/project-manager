@@ -12,6 +12,7 @@ import type {
 } from '../../types/store';
 import type {
   Project,
+  ProjectSummary,
   ListDocument,
   ListItem,
   LabelsDocument,
@@ -65,7 +66,7 @@ const projectSetCurrentSlice = createSlice({
   name: 'projectSetCurrent',
   initialState: projectSetCurrentInitialState,
   reducers: {
-    projectSetCurrent(_state, action: PayloadAction<Project>) {
+    projectSetCurrent(_state, action: PayloadAction<ProjectSummary>) {
       return { project: action.payload };
     },
     projectSetCurrentReset() {

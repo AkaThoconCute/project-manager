@@ -4,6 +4,7 @@ import type {
   User,
   Notifications,
   Project,
+  ProjectSummary,
   ListDocument,
   LabelsDocument,
   Task,
@@ -61,7 +62,7 @@ export interface ProjectCreateState {
 }
 
 export interface ProjectSetCurrentState {
-  project?: Project;
+  project?: ProjectSummary;
 }
 
 export interface ProjectGetDataState {
