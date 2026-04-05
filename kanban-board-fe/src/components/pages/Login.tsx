@@ -52,7 +52,7 @@ const InputField = styled(TextField)({
   "& input": {
     padding: "11px 10px",
   },
-  "& label": {
+  "& label:not(.MuiInputLabel-shrink)": {
     transform: "translate(10px, 13px) scale(1)",
   },
   "&:first-of-type": {
