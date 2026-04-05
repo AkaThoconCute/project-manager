@@ -24,6 +24,7 @@ export type UserPermission =
 export interface UserSummary {
   _id: string;
   username: string;
+  email?: string;
   profilePicture: string | null;
 }
 
