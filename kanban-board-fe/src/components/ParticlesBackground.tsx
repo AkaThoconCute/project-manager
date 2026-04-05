@@ -20,6 +20,8 @@ const ParticlesBackground = ({ disableMove }: ParticlesBackgroundProps) => {
 
   const options: ISourceOptions = useMemo(
     () => ({
+      fullScreen: { enable: true, zIndex: -1 },
+      background: { color: { value: "rgb(35, 39, 65)" } },
       particles: {
         number: {
           value: 200,
@@ -74,13 +76,6 @@ const ParticlesBackground = ({ disableMove }: ParticlesBackgroundProps) => {
   return (
     <Particles
       id="tsparticles"
-      style={{
-        background: "rgb(35, 39, 65)",
-        position: "fixed",
-        zIndex: -1,
-        top: 0,
-        left: 0,
-      }}
       options={options}
     />
   );
