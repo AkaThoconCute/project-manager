@@ -5,7 +5,7 @@ import type { SvgIconComponent } from "@mui/icons-material";
 interface NavItemProps {
   link?: string;
   title: string;
-  action?: () => void;
+  action?: (event?: React.MouseEvent<HTMLElement>) => void;
   Icon: SvgIconComponent;
   navExpanded: boolean;
   mobile: boolean;
