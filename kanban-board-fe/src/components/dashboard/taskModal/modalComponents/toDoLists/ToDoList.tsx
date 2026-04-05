@@ -141,7 +141,9 @@ const ToDoList = ({
           </div>
           <MoreVertIcon
             style={{ cursor: "pointer", marginBottom: 5 }}
-            onClick={(e) => setAnchorEl(e.currentTarget as unknown as HTMLElement)}
+            onClick={(e) =>
+              setAnchorEl(e.currentTarget as unknown as HTMLElement)
+            }
           />
         </div>
         <TasksProgress

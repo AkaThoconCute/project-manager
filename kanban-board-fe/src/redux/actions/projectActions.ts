@@ -96,7 +96,6 @@ export const projectTaskAdd = (
     // Fake: optimistic add — no socket echo needed
     console.log("run projectTaskAdd");
 
-    const now = new Date().toISOString();
     const optimisticTask: Task = {
       _id: uuidv4(),
       title,
@@ -110,8 +109,8 @@ export const projectTaskAdd = (
       toDoLists: { totalTasks: 0, tasksCompleted: 0, lists: [] },
       creatorId: userInfo?._id ?? '',
       projectId,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     dispatch(projectDataAddTask({ listId, task: optimisticTask }));
     callback();
@@ -606,6 +605,18 @@ export const addToDoTask = (
   callback: () => void,
 ): AppThunk => (dispatch, getState) => {
   const { socketConnection: { socket }, projectSetTask: { task } } = getState();
+
+  if (isFakeMode()) {
+    if (task && task._id === taskId) {
+      const optimisticToDoTask = { _id: uuidv4(), title, finished: false };
+      const taskClone = structuredClone(task);
+      taskClone.toDoLists.lists[toDoListIndex].tasks.push(optimisticToDoTask);
+      taskClone.toDoLists.totalTasks += 1;
+      dispatch(projectSetTaskSuccess(taskClone));
+      callback();
+    }
+    return;
+  }
 
   if (socket) {
     socket.emit(
