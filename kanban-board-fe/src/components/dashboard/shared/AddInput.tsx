@@ -1,10 +1,18 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { InputAdornment, Input, Button, IconButton, Box } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import { animateScroll } from "react-scroll";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import {
+  projectTaskAdd,
+  projectListAdd,
+} from "../../../redux/actions/projectActions";
+import { v4 as uuidv4 } from "uuid";
+import { isFakeMode } from "../../../config/env";
+import type { Task } from "../../../types/models";
+import { projectDataAddTask } from "../../../redux/slices/projectSlice";
 
 interface AddInputProps {
   listId?: string;
@@ -15,8 +23,10 @@ const AddInput: React.FC<AddInputProps> = ({ listId, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const { socket } = useAppSelector((state) => state.socketConnection);
+  const dispatch = useAppDispatch();
   const { project } = useAppSelector((state) => state.projectSetCurrent);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { userInfo } = useAppSelector((state) => state.userLogin);
 
   const cancelHandle = () => {
     inputRef.current?.blur();
@@ -45,23 +55,67 @@ const AddInput: React.FC<AddInputProps> = ({ listId, placeholder }) => {
   const preventBlurHandle = (e: React.MouseEvent) => e.preventDefault();
 
   const addAction = () => {
-    if (title.trim() !== "") {
+    const newTitle = title.trim();
+    const projectId = project?._id;
+    console.log(
+      "run addAction" + "title: " + newTitle + ", project: " + project,
+    );
+
+    if (title.trim() !== "" && project?._id) {
       if (listId) {
-        socket?.emit(
-          "add-task",
-          { projectId: project?._id, listId, title },
-          () => {
-            setTitle("");
-            inputRef.current?.focus();
-          },
-        );
-      } else {
-        socket?.emit("add-list", { projectId: project?._id, title }, () => {
+        const callback = () => {
           setTitle("");
           inputRef.current?.focus();
-          const boardContainer = document.getElementById("board-container");
-          if (boardContainer) boardContainer.scrollLeft += 1000;
-        });
+        };
+
+        if (isFakeMode()) {
+          // Fake: optimistic add — no socket echo needed
+          console.log("run create task");
+
+          const now = new Date().toISOString();
+          const optimisticTask: Task = {
+            _id: uuidv4(),
+            title,
+            description: "",
+            author: userInfo?._id ?? "",
+            archived: false,
+            comments: [],
+            users: [],
+            usersWatching: [],
+            labels: [],
+            toDoLists: { totalTasks: 0, tasksCompleted: 0, lists: [] },
+            creatorId: userInfo?._id ?? "",
+            projectId: project._id,
+            createdAt: now,
+            updatedAt: now,
+          };
+          dispatch(projectDataAddTask({ listId, task: optimisticTask }));
+          callback();
+        } else {
+          // Real: emit to server — server echoes 'new-task' to ALL via io.to(),
+          // Board.tsx listener handles the add via projectDataAddTask
+          if (socket)
+            socket.emit(
+              "add-task",
+              { projectId: project._id, listId, title },
+              callback,
+            );
+        }
+        // dispatch(
+        //   projectTaskAdd(project._id, listId, title, () => {
+        //     setTitle("");
+        //     inputRef.current?.focus();
+        //   }),
+        // );
+      } else {
+        dispatch(
+          projectListAdd(project._id, title, () => {
+            setTitle("");
+            inputRef.current?.focus();
+            const boardContainer = document.getElementById("board-container");
+            if (boardContainer) boardContainer.scrollLeft += 1000;
+          }),
+        );
       }
     }
   };

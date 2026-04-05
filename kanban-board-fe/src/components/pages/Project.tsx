@@ -52,7 +52,7 @@ const Project = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, userInfo?._id]);
 
   // Fetch project data or navigate to boards if invalid id
   useEffect(() => {

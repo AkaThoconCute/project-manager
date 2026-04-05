@@ -2,7 +2,8 @@ import {
   projectCreateRequest, projectCreateSuccess, projectCreateFail,
   projectSetCurrent,
   projectDataRequest, projectDataSuccess, projectDataFail,
-  projectDataUpdateLists, projectDataMoveTask, projectDataUpdateLabels,
+  projectDataUpdateLists, projectDataAddTask, projectDataAddList,
+  projectDataMoveTask, projectDataUpdateLabels,
   projectSetMessages,
   projectTaskMove as projectTaskMoveAction, projectTaskMoveReset,
   projectSetTaskRequest, projectSetTaskSuccess, projectSetTaskFail,
@@ -15,6 +16,7 @@ import {
   fakeCreateProject, fakeGetProjectData, fakeGetTask, fakeFindUsersToInvite,
 } from '../../services/fake/projectFakeApi';
 import { isFakeMode } from '../../config/env';
+import { v4 as uuidv4 } from 'uuid';
 import { BACKGROUND_COLORS } from '../../util/colorsConstants';
 import { getTaskIndexes } from '../../util/utilFunctions';
 import type { AppThunk } from '../../types/store';
@@ -80,7 +82,73 @@ export const getProjectData = (projectId: string, prevProjectId?: string): AppTh
     }
   };
 
-// ── 3. projectTaskMove (DnD) ────────────────────────────────────────
+// ── 3. projectTaskAdd ───────────────────────────────────────────────
+
+export const projectTaskAdd = (
+  projectId: string,
+  listId: string,
+  title: string,
+  callback: () => void,
+): AppThunk => (dispatch, getState) => {
+  const { socketConnection: { socket }, userLogin: { userInfo } } = getState();
+
+  if (isFakeMode()) {
+    // Fake: optimistic add — no socket echo needed
+    console.log("run here");
+
+    const now = new Date().toISOString();
+    const optimisticTask: Task = {
+      _id: uuidv4(),
+      title,
+      description: '',
+      author: userInfo?._id ?? '',
+      archived: false,
+      comments: [],
+      users: [],
+      usersWatching: [],
+      labels: [],
+      toDoLists: { totalTasks: 0, tasksCompleted: 0, lists: [] },
+      creatorId: userInfo?._id ?? '',
+      projectId,
+      createdAt: now,
+      updatedAt: now,
+    };
+    dispatch(projectDataAddTask({ listId, task: optimisticTask }));
+    callback();
+  } else {
+    // Real: emit to server — server echoes 'new-task' to ALL via io.to(),
+    // Board.tsx listener handles the add via projectDataAddTask
+    if (socket) socket.emit('add-task', { projectId, listId, title }, callback);
+  }
+};
+
+// ── 4. projectListAdd ───────────────────────────────────────────────
+
+export const projectListAdd = (
+  projectId: string,
+  title: string,
+  callback: () => void,
+): AppThunk => (dispatch, getState) => {
+  const { socketConnection: { socket } } = getState();
+
+  if (isFakeMode()) {
+    // Fake: optimistic add — no socket echo needed
+    console.log("run projectListAdd");
+    const optimisticList = {
+      _id: uuidv4(),
+      title,
+      tasks: [] as Task[],
+    };
+    dispatch(projectDataAddList({ list: optimisticList }));
+    callback();
+  } else {
+    // Real: emit to server — server echoes 'list-added' to ALL via io.to(),
+    // Board.tsx listener handles the add via projectDataAddList
+    if (socket) socket.emit('add-list', { projectId, title }, callback);
+  }
+};
+
+// ── 5. projectTaskMove (DnD) ────────────────────────────────────────
 
 export const projectTaskMove = (
   dropResult: { removedIndex: number | null; addedIndex: number | null },
