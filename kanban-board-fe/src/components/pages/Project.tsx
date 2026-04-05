@@ -11,6 +11,7 @@ import {
 import Board from "../dashboard/Board";
 import Loader from "../Loader";
 import Helmet from "../Helmet";
+import { isFakeMode } from "../../config/env";
 
 const isObjectId = /^[0-9a-fA-F]{24}$/;
 
@@ -54,7 +55,7 @@ const Project = () => {
 
   // Fetch project data or navigate to boards if invalid id
   useEffect(() => {
-    if (id && id.match(isObjectId)) {
+    if (id && (isFakeMode() || id.match(isObjectId))) {
       setBackground("none");
       setProjectLoading(true);
       dispatch(getProjectData(id, project?._id));
