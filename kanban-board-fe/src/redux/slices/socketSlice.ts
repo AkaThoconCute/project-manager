@@ -1,13 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { Socket } from 'socket.io-client';
-import { SocketConnectionState } from '../../types/store';
+import { type SocketConnectionState } from '../../types/store';
 
 const socketConnectionSlice = createSlice({
   name: 'socketConnection',
   initialState: {} as SocketConnectionState,
   reducers: {
-    socketConnectSuccess(state, action: PayloadAction<Socket>) {
-      state.socket = action.payload;
+    socketConnectSuccess(_state, action: PayloadAction<Socket>) {
+      return { socket: action.payload } as SocketConnectionState;
     },
     socketConnectReset() {
       return {} as SocketConnectionState;
