@@ -725,6 +725,28 @@ export const addComment = (
 ): AppThunk => (dispatch, getState) => {
   const { userLogin: { userInfo }, socketConnection: { socket }, projectSetTask: { task } } = getState();
 
+  if (isFakeMode()) {
+    if (task && task._id === taskId) {
+      const now = new Date().toISOString();
+      const optimisticComment = {
+        _id: uuidv4(),
+        comment,
+        user: {
+          _id: userInfo!._id,
+          username: userInfo!.username,
+          profilePicture: userInfo!.profilePicture,
+        },
+        createdAt: now,
+        updatedAt: now,
+      };
+      const taskClone = structuredClone(task);
+      taskClone.comments.unshift(optimisticComment);
+      dispatch(projectSetTaskSuccess(taskClone));
+      callback();
+    }
+    return;
+  }
+
   if (socket) {
     socket.emit(
       'add-comment',
