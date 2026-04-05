@@ -22,6 +22,7 @@ import type {
   ProjectUser,
 } from '../../types/models';
 import { projectDataTitleUpdate } from './userSlice';
+import _ from 'lodash';
 
 // ── 1. projectCreate slice ──────────────────────────────────────────
 
@@ -75,7 +76,7 @@ const projectSetCurrentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(projectDataTitleUpdate, (state, action) => {
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       stateClone.project!.title = action.payload.title;
       return stateClone;
     });
@@ -117,7 +118,7 @@ const projectGetDataSlice = createSlice({
       state,
       action: PayloadAction<{ listId: string; task: Task }>
     ) {
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       const listIndex = stateClone.lists!.lists.findIndex(
         (list) => list._id === action.payload.listId
       );
@@ -136,7 +137,7 @@ const projectGetDataSlice = createSlice({
       }>
     ) {
       const { added, removed, task } = action.payload;
-      const stateCopy = structuredClone(state);
+      const stateCopy = _.cloneDeep(state);
       stateCopy.lists!.lists[removed.listIndex].tasks.splice(removed.index, 1);
       stateCopy.lists!.lists[added.listIndex].tasks.splice(
         added.index,
@@ -146,7 +147,7 @@ const projectGetDataSlice = createSlice({
       return stateCopy;
     },
     projectDataAddList(state, action: PayloadAction<{ list: ListItem }>) {
-      const stateClone = { ...state };
+      const stateClone = _.cloneDeep(state);
       stateClone.lists!.lists.push(action.payload.list);
       return stateClone;
     },
@@ -155,7 +156,7 @@ const projectGetDataSlice = createSlice({
       action: PayloadAction<{ listIndex: number; title: string }>
     ) {
       const { listIndex, title } = action.payload;
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       stateClone.lists!.lists[listIndex].title = title;
       return stateClone;
     },
@@ -163,13 +164,13 @@ const projectGetDataSlice = createSlice({
       state,
       action: PayloadAction<{ joinId: string; joinIdActive: boolean }>
     ) {
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       stateClone.project!.joinId = action.payload.joinId;
       stateClone.project!.joinIdActive = action.payload.joinIdActive;
       return stateClone;
     },
     projectDataUsersUpdate(state, action: PayloadAction<ProjectUser[]>) {
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       stateClone.project!.users = action.payload;
       return stateClone;
     },
@@ -184,7 +185,7 @@ const projectGetDataSlice = createSlice({
       action: PayloadAction<{ listIndex: number; taskId: string }>
     ) {
       const { listIndex, taskId } = action.payload;
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       const taskIndex = stateClone.lists!.lists[listIndex].tasks.findIndex(
         (x) => x._id === taskId
       );
@@ -203,7 +204,7 @@ const projectGetDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(projectDataTitleUpdate, (state, action) => {
-      const stateClone = structuredClone(state);
+      const stateClone = _.cloneDeep(state);
       stateClone.project!.title = action.payload.title;
       return stateClone;
     });

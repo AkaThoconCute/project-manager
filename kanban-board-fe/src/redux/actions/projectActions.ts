@@ -94,7 +94,7 @@ export const projectTaskAdd = (
 
   if (isFakeMode()) {
     // Fake: optimistic add — no socket echo needed
-    console.log("run here");
+    console.log("run projectTaskAdd");
 
     const now = new Date().toISOString();
     const optimisticTask: Task = {
