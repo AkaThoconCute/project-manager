@@ -10,6 +10,7 @@ import {
 } from "../../redux/slices/projectSlice";
 import Board from "../dashboard/Board";
 import Loader from "../Loader";
+import TaskModal from "../dashboard/taskModal/TaskModal";
 import Helmet from "../Helmet";
 import { isFakeMode } from "../../config/env";
 
@@ -131,7 +132,11 @@ const Project = () => {
           <>
             <Helmet title={project.title} />
             <Board />
-            {/* TODO: TaskModal (Feature 7) */}
+            <TaskModal
+              userPermissions={project.permissions ?? 1}
+              projectId={project._id}
+              userId={userInfo!._id}
+            />
           </>
         )
       )}
