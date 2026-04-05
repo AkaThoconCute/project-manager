@@ -8,7 +8,7 @@ import {
   projectTaskMove as projectTaskMoveAction, projectTaskMoveReset,
   projectSetTaskRequest, projectSetTaskSuccess, projectSetTaskFail,
   projectFindUsersRequest, projectFindUsersSuccess, projectFindUsersFail,
-  projectToDoVisibilityUpdate, projectResetNewMessage,
+  projectToDoVisibilityUpdate, projectResetNewMessage, projectUpdateMessages,
 } from '../slices/projectSlice';
 import { userDataUpdate } from '../slices/userSlice';
 import { apiClient, extractErrorMessage } from '../../services/apiClient';
@@ -891,6 +891,23 @@ export const sendMessage = (message: string, callback: () => void): AppThunk =>
     } = getState();
 
     dispatch(projectResetNewMessage());
+
+    if (isFakeMode()) {
+      const optimisticMessage = {
+        _id: uuidv4(),
+        message,
+        user: {
+          _id: userInfo!._id,
+          username: userInfo!.username,
+          profilePicture: userInfo!.profilePicture,
+        },
+        projectId: project!._id,
+        createdAt: new Date().toISOString(),
+      };
+      dispatch(projectUpdateMessages(optimisticMessage));
+      callback();
+      return;
+    }
 
     if (socket) {
       socket.emit(
