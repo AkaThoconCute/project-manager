@@ -13,9 +13,9 @@ import { projectTaskArchive } from "../../../../redux/actions/projectActions";
 import { projectSetTaskSuccess } from "../../../../redux/slices/projectSlice";
 import type { Task as TaskType } from "../../../../types/models";
 import LabelItem from "../../shared/LabelItem";
-import TaskDeadlineIcon from "./TaskDeadlineIcon";
-import TaskTasksCompleted from "./TaskTasksCompleted";
-import TaskUsers from "./TaskUsers";
+import TaskDeadlineIcon from "./taskComponents/TaskDeadlineIcon";
+import TaskTasksCompleted from "./taskComponents/TaskTasksCompleted";
+import TaskUsers from "./taskComponents/TaskUsers";
 
 interface TaskProps {
   task: TaskType;

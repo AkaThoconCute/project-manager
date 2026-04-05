@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
-import { useAppSelector } from "../../../../redux/hooks";
-import type { UserSummary } from "../../../../types/models";
+import { useAppSelector } from "../../../../../redux/hooks";
+import type { UserSummary } from "../../../../../types/models";
 
 interface TaskUsersProps {
   users: (string | UserSummary)[];
